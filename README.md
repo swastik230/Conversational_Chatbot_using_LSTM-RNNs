@@ -21,6 +21,5 @@ Solution: Consider using a Sequence-to-Sequence (Seq2Seq) architecture with sepa
                                                                                                                     step 4:-Epochs
 Training for 500 epochs on such a small dataset might lead to overfitting.
 Solution: Use early stopping and evaluate model performance on a validation set.
-                                                                                                                    
 step 5:-Generate Response Function
 The generate_response function outputs text directly from predictions, which might not be meaningful since it doesn't consider sequence generation.
