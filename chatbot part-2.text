@@ -1,0 +1,110 @@
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import Dataset, DataLoader
+from sklearn.preprocessing import LabelEncoder
+import numpy as np
+
+# Sample conversational dataset
+data = [
+    ("Hello", "Hi there!"),
+    ("How are you?", "I'm good, thank you!"),
+    ("What is your name?", "I am a chatbot."),
+    ("Tell me a joke", "Why don't scientists trust atoms? Because they make up everything!"),
+    ("Goodbye", "Bye! Have a nice day!"),
+]
+
+# Preprocessing
+class ChatDataset(Dataset):
+    def __init__(self, conversations):
+        self.questions = [q for q, _ in conversations]
+        self.answers = [a for _, a in conversations]
+
+        # Tokenize and encode text
+        self.tokenizer = LabelEncoder()
+        self.tokenizer.fit([char for text in self.questions + self.answers for char in text])
+
+        self.input_sequences = [self.text_to_sequence(q) for q in self.questions]
+        self.output_sequences = [self.text_to_sequence(a) for a in self.answers]
+        self.max_length = max(max(len(seq) for seq in self.input_sequences),
+                              max(len(seq) for seq in self.output_sequences))
+
+    def text_to_sequence(self, text):
+        return [self.tokenizer.transform([char])[0] for char in text]
+
+    def __len__(self):
+        return len(self.questions)
+
+    def __getitem__(self, index):
+        x = self.input_sequences[index]
+        y = self.output_sequences[index]
+        x_padded = np.pad(x, (0, self.max_length - len(x)), 'constant')
+        y_padded = np.pad(y, (0, self.max_length - len(y)), 'constant')
+        return torch.tensor(x_padded, dtype=torch.long), torch.tensor(y_padded, dtype=torch.long)
+
+# Hyperparameters
+embedding_dim = 16
+hidden_dim = 64
+batch_size = 2
+num_epochs = 500
+learning_rate = 0.01
+
+# Dataset and DataLoader
+dataset = ChatDataset(data)
+dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+
+# Define the RNN model
+class ChatRNN(nn.Module):
+    def __init__(self, vocab_size, embedding_dim, hidden_dim):
+        super(ChatRNN, self).__init__()
+        self.embedding = nn.Embedding(vocab_size, embedding_dim)
+        self.rnn = nn.RNN(embedding_dim, hidden_dim, batch_first=True)
+        self.fc = nn.Linear(hidden_dim, vocab_size)
+
+    def forward(self, x):
+        embedded = self.embedding(x)
+        rnn_out, _ = self.rnn(embedded)
+        output = self.fc(rnn_out)
+        return output
+
+# Initialize the model
+vocab_size = len(dataset.tokenizer.classes_)
+model = ChatRNN(vocab_size, embedding_dim, hidden_dim)
+
+# Loss and optimizer
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+
+# Training loop
+for epoch in range(num_epochs):
+    for inputs, targets in dataloader:
+        outputs = model(inputs)
+        loss = criterion(outputs.view(-1, vocab_size), targets.view(-1))
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+    if (epoch + 1) % 50 == 0:
+        print(f"Epoch [{epoch + 1}/{num_epochs}], Loss: {loss.item():.4f}")
+
+# Function to generate a response
+def generate_response(input_text):
+    model.eval()
+    with torch.no_grad():
+        input_seq = dataset.text_to_sequence(input_text)
+        input_seq_padded = np.pad(input_seq, (0, dataset.max_length - len(input_seq)), 'constant')
+        input_tensor = torch.tensor(input_seq_padded, dtype=torch.long).unsqueeze(0)
+        output_tensor = model(input_tensor)
+        output_seq = torch.argmax(output_tensor, dim=2).squeeze(0).tolist()
+        response = ''.join(dataset.tokenizer.inverse_transform(output_seq)).strip()
+        return response
+
+# Chatbot interaction
+print("Chatbot is ready! Type 'quit' to exit.")
+while True:
+    user_input = input("You: ")
+    if user_input.lower() == "quit":
+        print("Chatbot: Goodbye!")
+        break
+    response = generate_response(user_input)
+    print(f"Chatbot: {response}")
