@@ -15,7 +15,8 @@ c.Solution: Expand the dataset with more diverse conversational pairs to improve
                                                                                                                     
                                                                                                                     
                             step 2:-Output Mismatch
-                                                                                                                     The generate_response function assumes the model will output meaningful sequences. However, as the output is tokenized and one-hot encoded, decoding the model's predictions directly into coherent text may not work as expected.
+                                                                                                                     
+ The generate_response function assumes the model will output meaningful sequences. However, as the output is tokenized and one-hot encoded, decoding the model's predictions directly into coherent text may not work as expected.
 Solution: Use a greedy or beam search decoding method to interpret the model's predictions correctly.
                                                                                                                     
                                                                                                                     
