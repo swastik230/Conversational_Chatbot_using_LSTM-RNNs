@@ -8,10 +8,11 @@ This project is to create conversational chatbot using Sequence to sequence LSTM
                                                                                                             
 Observations and Suggestions:
                                                                                                                     
-step 1:-Data Limitation
-                                                                                                                   a.The dataset is very small and simple, which makes it insufficient for training a robust model.
-b.The model will likely overfit the given data and won't generalize well.
-c.Solution: Expand the dataset with more diverse conversational pairs to improve the model's learning and performance. 
+                            step 1:-Data Limitation
+                                                                                                                   
+ a.The dataset is very small and simple, which makes it insufficient for training a robust model.
+ b.The model will likely overfit the given data and won't generalize well.
+ c.Solution: Expand the dataset with more diverse conversational pairs to improve the model's learning and performance. 
                                                                                                                     
                                                                                                                     
                             step 2:-Output Mismatch
