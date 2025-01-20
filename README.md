@@ -1,10 +1,9 @@
 # Conversational_Chatbot_using_LSTM-RNNs
 This project is to create conversational chatbot using Sequence to sequence LSTM models. Sequence to sequence learning is about training models to convert from one domain to sequences another domain.
-      Language: Python 3.13
-      Dataset:use a small conversational dataset
+                                                                                                               
+      Language Dataset:use a small conversational dataset
       Pakages Used: numpy,pyTorch,sklearn, tensorflow, keras
-      Model Used: Seq2Seq LSTM and RNNs model
-  Observations and Suggestions:
+      Model Used: Seq2Seq LSTM and RNNs model                                                                            Observations and Suggestions:
 step 1:-Data Limitation
 a.The dataset is very small and simple, which makes it insufficient for training a robust model.
 b.The model will likely overfit the given data and won't generalize well.
