@@ -15,7 +15,9 @@ c.Solution: Expand the dataset with more diverse conversational pairs to improve
                                                                                                                     step 2:-Output Mismatch
                                                                                                                      The generate_response function assumes the model will output meaningful sequences. However, as the output is tokenized and one-hot encoded, decoding the model's predictions directly into coherent text may not work as expected.
 Solution: Use a greedy or beam search decoding method to interpret the model's predictions correctly.
-                                                                                                                    step 3:-Training Loss
+                                                                                                                    
+                                                                                                                    
+                            step 3:-Training Loss
                                                                                                                   You're using categorical_crossentropy for the output, which is fine since you one-hot encoded the outputs. However, the high-dimensional output (vocab_size classes) can make convergence slow.
 Solution: Consider using a Sequence-to-Sequence (Seq2Seq) architecture with separate encoder and decoder layers, which is more effective for conversational AI.
                                                                                                                     
