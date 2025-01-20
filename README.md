@@ -18,6 +18,7 @@ Solution: Use a greedy or beam search decoding method to interpret the model's p
                                                                                                                     
                                                                                                                     
                             step 3:-Training Loss
+                                                                                                                  
                                                                                                                   You're using categorical_crossentropy for the output, which is fine since you one-hot encoded the outputs. However, the high-dimensional output (vocab_size classes) can make convergence slow.
 Solution: Consider using a Sequence-to-Sequence (Seq2Seq) architecture with separate encoder and decoder layers, which is more effective for conversational AI.
                                                                                                                     
