@@ -12,7 +12,9 @@ step 1:-Data Limitation
                                                                                                                    a.The dataset is very small and simple, which makes it insufficient for training a robust model.
 b.The model will likely overfit the given data and won't generalize well.
 c.Solution: Expand the dataset with more diverse conversational pairs to improve the model's learning and performance. 
-                                                                                                                    step 2:-Output Mismatch
+                                                                                                                    
+                                                                                                                    
+                            step 2:-Output Mismatch
                                                                                                                      The generate_response function assumes the model will output meaningful sequences. However, as the output is tokenized and one-hot encoded, decoding the model's predictions directly into coherent text may not work as expected.
 Solution: Use a greedy or beam search decoding method to interpret the model's predictions correctly.
                                                                                                                     
